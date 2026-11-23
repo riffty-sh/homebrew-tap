@@ -1,28 +1,30 @@
 class Riffty < Formula
-  desc "Self-contained multi-language software remediation (Python, JS/TS, Java Tier 1+2), riffty-ab, and infra cost intelligence"
+  desc "Deterministic multi-language software remediation (Python, JS/TS, Java), empirical A/B verification (riffty-ab), and infra cost intelligence"
   homepage "https://github.com/riffty-sh/riffty"
   url "https://github.com/riffty-sh/riffty.git",
-      tag:      "v0.3.1"
+      tag:      "v0.4.0"
   license "MIT"
   head "https://github.com/riffty-sh/riffty.git", branch: "main"
 
-  depends_on "maven" => :build
-  depends_on "openjdk@25" => :build
   depends_on "rust" => :build
 
   def install
-    ENV["JAVA_HOME"] = Formula["openjdk@25"].opt_libexec/"openjdk.jdk/Contents/Home"
-    system "bash", "plugins/riffty-java/package_jlink_aot.sh"
-    (libexec/"riffty-java").install Dir["plugins/riffty-java/dist/*"]
-
     system "cargo", "install", *std_cargo_args(path: "apps/riffty_cli")
     system "cargo", "install", *std_cargo_args(path: "apps/riffty_ab")
+  end
+
+  def caveats
+    <<~EOS
+      Python (Tier 1+2), JS/TS (Tier 1+2), and Java (Tier 1) are built-in with zero external runtimes.
+      Java Tier 2 (bundled JDK 25 + Leyden AOT + Error Prone/Picnic) auto-hydrates on first `.java` check,
+      or can be pre-installed for offline/CI use via:
+        riffty plugin install java
+    EOS
   end
 
   test do
     assert_match version.to_s, shell_output("#{bin}/riffty --version")
     assert_match version.to_s, shell_output("#{bin}/riffty-ab --version")
-    assert_predicate libexec/"riffty-java/riffty-java-runner.jar", :exist?
-    assert_predicate libexec/"riffty-java/runtime/bin/java", :exist?
+    assert_match "python (Tier 1+2)", shell_output("#{bin}/riffty plugin status")
   end
 end
