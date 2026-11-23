@@ -1,8 +1,8 @@
 class Riffty < Formula
-  desc "Deterministic, type-aware Python bug detector, surgical auto-fixer, and MCP diff reviewer"
+  desc "Deterministic multi-language software remediation, empirical A/B verification (riffty-ab), and infrastructure cost intelligence"
   homepage "https://github.com/riffty-sh/riffty"
   url "https://github.com/riffty-sh/riffty.git",
-      tag:      "v0.2.0"
+      tag:      "v0.3.0"
   license "MIT"
   head "https://github.com/riffty-sh/riffty.git", branch: "main"
 
@@ -10,9 +10,11 @@ class Riffty < Formula
 
   def install
     system "cargo", "install", *std_cargo_args(path: "apps/riffty_cli")
+    system "cargo", "install", *std_cargo_args(path: "apps/riffty_ab")
   end
 
   test do
     assert_match version.to_s, shell_output("#{bin}/riffty --version")
+    assert_match version.to_s, shell_output("#{bin}/riffty-ab --version")
   end
 end
