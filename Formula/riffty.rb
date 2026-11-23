@@ -2,7 +2,7 @@ class Riffty < Formula
   desc "Deterministic multi-language software remediation (Python, JS/TS, Java), empirical A/B verification (riffty-ab), and infra cost intelligence"
   homepage "https://github.com/riffty-sh/riffty"
   url "https://github.com/riffty-sh/riffty.git",
-      tag:      "v0.4.0"
+      tag:      "v0.4.1"
   license "MIT"
   head "https://github.com/riffty-sh/riffty.git", branch: "main"
 
